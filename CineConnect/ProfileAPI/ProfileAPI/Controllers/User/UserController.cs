@@ -110,6 +110,10 @@ namespace ProfileAPI.Controllers.User
             }
         }
 
+        /// <summary>
+        /// Удаление пользователя по его идентификатору.
+        /// </summary>
+
         [HttpDelete("delete/{userId}")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> DeleteUserAsync(Guid userId)
