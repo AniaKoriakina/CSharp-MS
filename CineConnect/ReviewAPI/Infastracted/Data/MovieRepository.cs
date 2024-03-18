@@ -14,40 +14,25 @@ namespace Infastracted.Data
     /// </summary>
     public class MovieRepository : IMovieRepository
     {
-        /// <summary>
-        /// Добавляет новый фильм.
-        /// </summary>
-        /// <param name="movie">Фильм для добавления.</param>
-        /// <returns>Идентификатор добавленного фильма.</returns>
+        /// <inheritdoc />
         public async Task<Guid> AddMovie(Movie movie)
         {
             return Guid.NewGuid();
         }
 
-        /// <summary>
-        /// Удаляет фильм по его идентификатору.
-        /// </summary>
-        /// <param name="movieId">Идентификатор фильма.</param>
+        /// <inheritdoc />
         public async Task DeleteMovie(Guid movieId)
         {
             Console.WriteLine($"Фильм с идентификатором {movieId} удален.");
         }
 
-
-        /// <summary>
-        /// Получает список всех фильмов.
-        /// </summary>
-        /// <returns>Список всех фильмов.</returns>
+        /// <inheritdoc />
         public async Task<List<Movie>> GetAllMovies()
         {
             return new List<Movie>();
         }
 
-        /// <summary>
-        /// Получает фильм по его идентификатору.
-        /// </summary>
-        /// <param name="movieId">Идентификатор фильма.</param>
-        /// <returns>Фильм с указанным идентификатором.</returns>
+        /// <inheritdoc />
         public async Task<Movie> GetMovieById(Guid movieId)
         {
             var movie = new Movie

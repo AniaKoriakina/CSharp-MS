@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Controllers
 {
+    /// <summary>
+    /// Запрос для создания отзыва.
+    /// </summary>
     public record ReviewRequest
     {
         [Required]
@@ -25,6 +28,9 @@ namespace Api.Controllers
         public int Rating { get; init; }
     }
 
+    /// <summary>
+    /// Контроллер для управления отзывами.
+    /// </summary>
     [Route("api/review")]
     public class ReviewController : ControllerBase
     {
@@ -35,6 +41,10 @@ namespace Api.Controllers
             _reviewSystem = reviewSystem;
         }
 
+        /// <summary>
+        /// Добавляет новый отзыв.
+        /// </summary>
+        /// <param name="request">Запрос на создание отзыва.</param>
         [HttpPost]
         [ProducesResponseType(200)]
         public async Task<ActionResult> AddReviewAsync([FromBody] ReviewRequest request)

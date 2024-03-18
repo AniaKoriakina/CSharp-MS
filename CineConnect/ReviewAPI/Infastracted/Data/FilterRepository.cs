@@ -18,6 +18,7 @@ namespace Infastracted.Data
             _movieRepository = movieRepository;
         }
 
+        /// <inheritdoc />
         public async Task<List<Movie>> FilterMovies(Filter filter)
         {
             var allMovies = _movieRepository.GetAllMovies().Result;

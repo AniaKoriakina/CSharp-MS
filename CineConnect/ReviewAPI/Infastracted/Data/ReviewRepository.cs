@@ -16,30 +16,19 @@ namespace Infastracted.Data
     /// </summary>
     public class ReviewRepository : IReviewSystem
     {
-        /// <summary>
-        /// Добавляет новый отзыв.
-        /// </summary>
-        /// <param name="review">Отзыв для добавления.</param>
-        /// <returns>Идентификатор добавленного отзыва.</returns>
+        /// <inheritdoc />
         public async Task<Guid> AddReview(Review review)
         {
             return Guid.NewGuid();
         }
 
-        /// <summary>
-        /// Получает все отзывы.
-        /// </summary>
-        /// <returns>Список всех отзывов.</returns>
+        /// <inheritdoc />
         public async Task<List<Review>> GetAllReviews()
         {
             return new List<Review>();
         }
 
-        /// <summary>
-        /// Получает отзывы для указанного фильма.
-        /// </summary>
-        /// <param name="movieId">Идентификатор фильма.</param>
-        /// <returns>Список отзывов для указанного фильма.</returns>
+        /// <inheritdoc />
         public async Task<List<Review>> GetReviewsForMovie(Guid movieId)
         {
             return new List<Review>();

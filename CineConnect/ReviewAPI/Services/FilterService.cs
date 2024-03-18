@@ -18,6 +18,7 @@ namespace Services
             _movieFilter = movieFilter;
         }
 
+        /// <inheritdoc />
         public async Task<List<Movie>> FilterMoviesAsync(Filter filter)
         {
             return await _movieFilter.FilterMovies(filter);

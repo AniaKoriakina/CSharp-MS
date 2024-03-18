@@ -7,6 +7,9 @@ using Domain.Entities;
 
 namespace Api.Controllers
 {
+    /// <summary>
+    /// Запрос для создания фильма.
+    /// </summary>
     public record MovieRequest
     {
         [Required]
@@ -29,6 +32,9 @@ namespace Api.Controllers
         public double Rating { get; init; }
     }
 
+    /// <summary>
+    /// Контроллер для управления фильмами.
+    /// </summary>
     [Route("api/movies")]
     [ApiController]
     public class MovieController : ControllerBase
@@ -40,6 +46,12 @@ namespace Api.Controllers
             _movieRepository = movieRepository;
         }
 
+
+        /// <summary>
+        /// Добавляет новый фильм.
+        /// </summary>
+        /// <param name="request">Запрос на создание фильма.</param>
+        /// <returns>Результат выполнения операции.</returns>
         [HttpPost]
         [ProducesResponseType(200)]
         public async Task<ActionResult> AddMovieAsync([FromBody] MovieRequest request)
@@ -57,6 +69,11 @@ namespace Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Получает информацию о фильме по его идентификатору.
+        /// </summary>
+        /// <param name="movieId">Идентификатор фильма.</param>
+        /// <returns>Информация о фильме.</returns>
         [HttpGet("{movieId}")]
         [ProducesResponseType(200, Type = typeof(Movie))]
         [ProducesResponseType(404)]
@@ -70,6 +87,10 @@ namespace Api.Controllers
             return movie;
         }
 
+        /// <summary>
+        /// Получает список всех фильмов.
+        /// </summary>
+        /// <returns>Список всех фильмов.</returns>
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult> GetAllMoviesAsync()
@@ -78,6 +99,10 @@ namespace Api.Controllers
             return Ok(movies);
         }
 
+        /// <summary>
+        /// Удаляет фильм по его идентификатору.
+        /// </summary>
+        /// <param name="movieId">Идентификатор фильма.</param>
         [HttpDelete]
         [ProducesResponseType(200)]
         public async Task<ActionResult> DeleteMovieAsync(Guid movieId)

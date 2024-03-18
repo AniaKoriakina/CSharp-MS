@@ -14,6 +14,11 @@ namespace Api.Controllers
             _movieFilter = movieFilter;
         }
 
+        /// <summary>
+        /// Выполняет фильтрацию фильмов согласно указанным параметрам.
+        /// </summary>
+        /// <param name="filter">Параметры фильтрации.</param>
+        /// <returns>Список отфильтрованных фильмов.</returns>
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<List<Movie>>> FilterMoviesAsync([FromQuery] Filter filter)
