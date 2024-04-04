@@ -12,7 +12,7 @@ namespace Infastracted.Connections
 
         public Task<bool> CheckUserValidAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
     }
 }

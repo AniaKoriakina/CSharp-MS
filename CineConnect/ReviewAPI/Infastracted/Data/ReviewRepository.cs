@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace Infastracted.Data
         public async Task<Guid> AddReview(Review review)
         {
             return Guid.NewGuid();
+        }
+
+        public Task<Review[]> GetAllAsync()
+        {
+            return Task.FromResult(new Review[] { });
         }
 
         /// <summary>

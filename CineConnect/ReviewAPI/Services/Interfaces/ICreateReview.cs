@@ -10,5 +10,7 @@ namespace Services.Interfaces
     public interface ICreateReview
     {
         Task<Guid> CreateReviewAsync(Review review);
+
+        Task<Review[]> GetReviewListAsync();
     }
 }

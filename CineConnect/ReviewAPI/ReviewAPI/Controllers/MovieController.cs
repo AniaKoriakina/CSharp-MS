@@ -1,9 +1,11 @@
 ﻿using Domain.Interfaces;
-using Domain.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Domain.Entities;
+using Core.TraceIdLogic.Interfaces;
+using Core.HttpLogic.Services.Interfaces;
+using Core.HttpLogic.Services;
 
 namespace Api.Controllers
 {

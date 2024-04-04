@@ -1,4 +1,6 @@
 using Api;
+using Core.HttpLogic;
+using Core.TraceIdLogic;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 Startup.ConfigureServices(builder.Services);
+StartupTraceId.TryAddTraceID(builder.Services);
+HttpServiceStartup.AddHttpRequestService(builder.Services);
 
 var app = builder.Build();
 
@@ -19,9 +23,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseMiddleware<TraceIdMiddleware>();
 }
 
 app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 

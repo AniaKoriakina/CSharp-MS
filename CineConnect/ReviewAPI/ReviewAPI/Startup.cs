@@ -19,6 +19,8 @@ namespace Api
             services.AddScoped<IMovieFilter, FilterRepository>();
             services.AddScoped<FilterService>();
 
+            services.AddScoped<ICreateReview, CreateReview>();
+
             services.AddScoped<IReviewSystem, ReviewRepository>();
             services.AddScoped<CreateReview>();
 

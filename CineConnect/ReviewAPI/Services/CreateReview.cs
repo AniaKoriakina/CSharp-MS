@@ -31,5 +31,11 @@ namespace Services
 
             return id;
         }
+
+        public async Task<Review[]> GetReviewListAsync()
+        {
+            var reviewList = await _reviewSystem.GetAllAsync();
+            return reviewList;
+        }
     }
 }
