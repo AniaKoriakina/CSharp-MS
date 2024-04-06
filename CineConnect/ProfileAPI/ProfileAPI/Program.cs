@@ -2,6 +2,7 @@ using Dal;
 using Logic;
 using Logic.Users.Interfaces;
 using Core.HttpLogic;
+using Core.TraceIdLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+StartupTraceId.TryAddTraceID(builder.Services);
+HttpServiceStartup.AddHttpRequestService(builder.Services);
+
 builder.Services.TryAddLogic();
 builder.Services.TryAddDal();
 
@@ -22,6 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseMiddleware<TraceIdMiddleware>();
 }
 
 app.UseHttpsRedirection();
