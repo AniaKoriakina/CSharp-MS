@@ -1,5 +1,5 @@
 using Api;
-using Core.HttpLogic;
+using Core.Services.HttpLogic;
 using Core.TraceIdLogic;
 using Microsoft.Extensions.FileProviders;
 

@@ -1,14 +1,13 @@
-﻿using Core.HttpLogic.Services.Interfaces;
-using Core.HttpLogic.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Services.HttpLogic.Interfaces;
 
-namespace Core.HttpLogic
+namespace Core.Services.HttpLogic
 {
     /// <summary>
     /// Регистрация в DI сервисов для HTTP-соединений

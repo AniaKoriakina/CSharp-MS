@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Core.Services.RabbitMq.interfaces;
+using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -76,10 +77,12 @@ namespace Api.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly ICreateReview _reviewSystem;
+        private readonly IRabbitMqService _rabbitMqService;
 
-        public ReviewController(ICreateReview reviewSystem)
+        public ReviewController(ICreateReview reviewSystem, IRabbitMqService rabbitMqService)
         {
             _reviewSystem = reviewSystem;
+            _rabbitMqService = rabbitMqService;
         }
 
         [HttpGet]
@@ -120,6 +123,9 @@ namespace Api.Controllers
                 Rating = request.Rating,
             };
             await _reviewSystem.CreateReviewAsync(review);
+
+            _rabbitMqService.SendMessage(request.ToString());
+
             return Ok();
         }
     }

@@ -1,4 +1,4 @@
-﻿using Core.HttpLogic.Services.Interfaces;
+﻿using Core.Services.HttpLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.HttpLogic.Services
+namespace Core.Services.HttpLogic
 {
     public record struct HttpConnectionData()
     {
@@ -16,6 +16,7 @@ namespace Core.HttpLogic.Services
 
         public string ClientName { get; set; }
     }
+
     /// <inheritdoc />
     public class HttpConnectionService : IHttpConnectionService
     {
