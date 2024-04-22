@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Dal.Users
 {
@@ -28,14 +27,14 @@ namespace Dal.Users
         /// <inheritdoc />
         public async Task<Guid> CreateUserAsync(UserDal user)
         {
-            if (user.UserId == Guid.Empty)
+            if (user.Id == Guid.Empty)
             {
-                user = user with { UserId = Guid.NewGuid() };
+                user = user with { Id = Guid.NewGuid() };
             }
 
-            if (Store.TryAdd(user.UserId, user))
+            if (Store.TryAdd(user.Id, user))
             {
-                return user.UserId;
+                return user.Id;
             }
 
             throw new Exception("Ошибка добавления пользователя");
@@ -60,9 +59,9 @@ namespace Dal.Users
         /// <inheritdoc />
         public async Task<bool> UpdateUserAsync(UserDal user)
         {
-            if (Store.ContainsKey(user.UserId))
+            if (Store.ContainsKey(user.Id))
             {
-                Store[user.UserId] = user;
+                Store[user.Id] = user;
                 return true;
             }
             throw new Exception("Ошибка удаления пользователя");

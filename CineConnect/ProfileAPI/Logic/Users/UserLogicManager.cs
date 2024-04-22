@@ -44,7 +44,6 @@ namespace Logic.Users
         {
             var userDal = new UserDal
             {
-                UserId = userId,
                 Login = user.Login,
                 UserName = user.UserName,
                 Email = user.Email

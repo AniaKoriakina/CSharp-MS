@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
