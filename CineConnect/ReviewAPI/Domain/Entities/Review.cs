@@ -26,5 +26,14 @@ namespace Domain.Entities
         [Required]
         [Range(1,5)]
         public int Rating { get; init; }
+
+        [Required]
+        public CreatedReviewUserName UserName { get; init; }
+    }
+
+    public class CreatedReviewUserName
+    {
+        [Required]
+        public string Name { get; init; }
     }
 }

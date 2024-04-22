@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.HttpLogic.Services.Interfaces
+namespace Core.Services.HttpLogic.Interfaces
 {
     public interface IHttpConnectionService
     {

@@ -1,9 +1,11 @@
 ﻿using Domain.Interfaces;
-using Domain.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Domain.Entities;
+using Core.TraceIdLogic.Interfaces;
+using Core.RabbitMq;
+using Core.Services.RabbitMq.interfaces;
 
 namespace Api.Controllers
 {
@@ -34,10 +36,12 @@ namespace Api.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _movieRepository;
+        private readonly IRabbitMqService _rabbitMqService;
 
-        public MovieController(IMovieRepository movieRepository)
+        public MovieController(IMovieRepository movieRepository, IRabbitMqService rabbitMqService)
         {
             _movieRepository = movieRepository;
+            _rabbitMqService = rabbitMqService;
         }
 
         [HttpPost]
@@ -54,6 +58,7 @@ namespace Api.Controllers
                 Description = request.Description,
                 Rating = request.Rating,
             });
+            _rabbitMqService.SendMessage(request.ToString());
             return Ok();
         }
 
@@ -67,6 +72,7 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
+            _rabbitMqService.SendMessage(movie.ToString());
             return movie;
         }
 
@@ -75,6 +81,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GetAllMoviesAsync()
         {
             var movies = await _movieRepository.GetAllMovies();
+            _rabbitMqService.SendMessage(movies.ToString());
             return Ok(movies);
         }
 
@@ -83,6 +90,7 @@ namespace Api.Controllers
         public async Task<ActionResult> DeleteMovieAsync(Guid movieId)
         {
             await _movieRepository.DeleteMovie(movieId);
+            _rabbitMqService.SendMessage($"Фильм с ID {movieId} удалён");
             return Ok();
         }
     }

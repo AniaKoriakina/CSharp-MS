@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Domain.Interfaces
     public interface IReviewSystem
     {
         Task<Guid> AddReview(Review review);
-        Task<List<Review>> GetAllReviews();
+        Task<Review[]> GetAllAsync();
         Task<List<Review>> GetReviewsForMovie(Guid moveId);
     }
 }
