@@ -1,5 +1,7 @@
-﻿using Logic.Users.Interfaces;
+﻿using Core.Sagas.Events;
+using Logic.Users.Interfaces;
 using Logic.Users.Models;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using ProfileAPI.Controllers.User.Requests;
 using ProfileAPI.Controllers.User.Responses;
@@ -13,10 +15,14 @@ namespace ProfileAPI.Controllers.User
     public class UserController : ControllerBase
     {
         private readonly IUserLogicManager _userLogicManager;
+        private readonly IBus _bus;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserLogicManager userLogicManager)
+        public UserController(IUserLogicManager userLogicManager, IBus bus, ILogger<UserController> logger)
         {
             _userLogicManager = userLogicManager;
+            _bus = bus;
+            _logger = logger;
         }
 
         /// <summary>
@@ -48,6 +54,17 @@ namespace ProfileAPI.Controllers.User
                     Message = "Пользователь успешно создан"
                 };
 
+                var userCreated = new UserCreated
+                {
+                    UserId = userId,
+                    UserName = request.UserName,
+                    Email = request.Email
+                };
+                
+                await _bus.Publish(response);
+                
+                _logger.LogInformation($"Пользователь {userCreated.UserId} с именем {userCreated.UserName} создан + {userCreated.Email}");
+                
                 return Ok(response);
             }
             catch (Exception ex)

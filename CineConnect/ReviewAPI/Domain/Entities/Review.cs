@@ -11,6 +11,9 @@ namespace Domain.Entities
     public record Review : BaseEntityDal<Guid>
     {
         [Required]
+        public Guid ReviewId { get; init; }
+        
+        [Required]
         public Guid UserId { get; init; }
 
         [Required]
