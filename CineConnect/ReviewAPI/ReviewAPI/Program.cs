@@ -1,6 +1,7 @@
 using Api;
 using Core.Sagas;
 using Core.Sagas.Handlers;
+using Core.Semaphore;
 using Core.Services.HttpLogic;
 using Core.TraceIdLogic;
 using MassTransit;
@@ -18,6 +19,9 @@ builder.Services.AddSwaggerGen();
 Startup.ConfigureServices(builder.Services);
 StartupTraceId.TryAddTraceID(builder.Services);
 HttpServiceStartup.AddHttpRequestService(builder.Services);
+
+builder.Services.AddSingleton<IDistributedSemaphore>(sp => 
+    new RedisSemaphore("localhost:6379"));
 
 builder.Services.AddMassTransit(x =>
 {

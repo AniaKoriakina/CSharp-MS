@@ -1,4 +1,5 @@
 ﻿using Core.Sagas.Events;
+using Core.Semaphore;
 using Logic.Users.Interfaces;
 using Logic.Users.Models;
 using MassTransit;

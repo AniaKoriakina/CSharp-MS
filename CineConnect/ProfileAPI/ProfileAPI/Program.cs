@@ -1,11 +1,13 @@
 using Core.Sagas;
 using Core.Sagas.Handlers;
+using Core.Semaphore;
 using Core.Services.HttpLogic;
 using Core.TraceIdLogic;
 using Dal;
 using Logic;
 using Logic.Users.Interfaces;
 using MassTransit;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<IDistributedSemaphore>(sp => 
+    new RedisSemaphore("localhost:6379"));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -53,7 +58,6 @@ HttpServiceStartup.AddHttpRequestService(builder.Services);
 
 builder.Services.TryAddLogic();
 builder.Services.TryAddDal();
-
 
 var app = builder.Build();
 

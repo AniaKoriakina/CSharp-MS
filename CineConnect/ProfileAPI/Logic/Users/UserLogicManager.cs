@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Semaphore;
 
 namespace Logic.Users
 {
@@ -14,10 +15,14 @@ namespace Logic.Users
     internal class UserLogicManager : IUserLogicManager
     {
         private readonly IUserRepository _userRepository;
+        private readonly IDistributedSemaphore _semaphore;
+        private const string SemaphoreKey = "profile_creation";
+        private static readonly TimeSpan SemaphoreTimeout = TimeSpan.FromSeconds(30);
 
-        public UserLogicManager(IUserRepository userRepository)
+        public UserLogicManager(IUserRepository userRepository, IDistributedSemaphore semaphore)
         {
             _userRepository = userRepository;
+            _semaphore = semaphore;
         }
 
         /// <inheritdoc />
@@ -29,14 +34,27 @@ namespace Logic.Users
 
         public async Task<Guid> CreateUserAsync(UserLogic user)
         {
-            var userDal = new UserDal
+            if (!await _semaphore.WaitAsync(SemaphoreKey, SemaphoreTimeout))
             {
-                Login = user.Login,
-                UserName = user.UserName,
-                Email = user.Email
-            };
-
-            return await _userRepository.CreateUserAsync(userDal);
+                try
+                {
+                    var userDal = new UserDal
+                    {
+                        Login = user.Login,
+                        UserName = user.UserName,
+                        Email = user.Email
+                    };
+                    return await _userRepository.CreateUserAsync(userDal);
+                }
+                finally
+                {
+                    await _semaphore.ReleaseAsync(SemaphoreKey);
+                }
+            }
+            else
+            {
+                throw new Exception($"Timeout {SemaphoreKey}");
+            }
         }
 
         /// <inheritdoc />

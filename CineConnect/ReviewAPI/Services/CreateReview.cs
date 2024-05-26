@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Semaphore;
 
 namespace Services
 {
@@ -13,11 +14,15 @@ namespace Services
     {
         private readonly IReviewSystem _reviewSystem;
         private readonly ICheckUser _checkUser;
+        private readonly IDistributedSemaphore _semaphore;
+        private const string SemaphoreKey = "review_creation";
+        private static readonly TimeSpan SemaphoreTimeout = TimeSpan.FromSeconds(30);
 
-        public CreateReview(IReviewSystem reviewSystem, ICheckUser checkUser)
+        public CreateReview(IReviewSystem reviewSystem, ICheckUser checkUser, IDistributedSemaphore semaphore)
         {
             _reviewSystem = reviewSystem;
             _checkUser = checkUser;
+            _semaphore = semaphore;
         }
 
         public async Task<Guid> CreateReviewAsync(Review review)
@@ -27,9 +32,22 @@ namespace Services
                 throw new Exception("Неверный пользователь");
             }
 
-            var id = await _reviewSystem.AddReview(review);
-
-            return id;
+            if (!await _semaphore.WaitAsync(SemaphoreKey, SemaphoreTimeout))
+            {
+                try
+                {
+                    var id = await _reviewSystem.AddReview(review);
+                    return id;
+                }
+                finally
+                {
+                    await _semaphore.ReleaseAsync(SemaphoreKey);
+                }
+            }
+            else
+            {
+                throw new Exception("Timeout");
+            } 
         }
 
         public async Task<Review[]> GetReviewListAsync()
