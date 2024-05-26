@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Core.Sagas.Events;
+using MassTransit;
 
 namespace Api.Controllers
 {
@@ -18,7 +20,7 @@ namespace Api.Controllers
     {
         [JsonProperty("id")]
         [Required]
-        public Guid Id { get; init; }
+        public Guid ReviewId { get; init; }
 
         [JsonProperty("userId")]
         [Required]
@@ -78,11 +80,16 @@ namespace Api.Controllers
     {
         private readonly ICreateReview _reviewSystem;
         private readonly IRabbitMqService _rabbitMqService;
+        private readonly IBus _bus;
+        private readonly ILogger<ReviewController> _logger;
 
-        public ReviewController(ICreateReview reviewSystem, IRabbitMqService rabbitMqService)
+        public ReviewController(ICreateReview reviewSystem, IRabbitMqService rabbitMqService, IBus bus,
+            ILogger<ReviewController> logger)
         {
             _reviewSystem = reviewSystem;
             _rabbitMqService = rabbitMqService;
+            _bus = bus;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -95,7 +102,7 @@ namespace Api.Controllers
             {
                 ReviewList = res.Select(val => new ReviewResponse
                 {
-                    Id = val.Id,
+                    ReviewId = val.ReviewId,
                     UserId = val.UserId,
                     UserName = new UserNameResponse
                     {
@@ -105,8 +112,9 @@ namespace Api.Controllers
                     ViewingDate = val.ViewingDate,
                     ReviewText = val.ReviewText,
                     Rating = val.Rating
-                }).ToArray() 
+                }).ToArray()
             };
+
             return Ok(response);
         }
 
@@ -114,17 +122,32 @@ namespace Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> AddReviewAsync([FromBody] ReviewRequest request)
         {
+            var reviewId = Guid.NewGuid();
+
             var review = new Review
             {
+                ReviewId = reviewId, 
                 UserId = request.UserId,
                 SelectedMovie = request.SelectedMovie,
                 ViewingDate = request.ViewingDate,
                 ReviewText = request.ReviewText,
                 Rating = request.Rating,
             };
+
             await _reviewSystem.CreateReviewAsync(review);
 
+            var reviewCreated = new ReviewCreated
+            {
+                ReviewId = reviewId, 
+                UserId = review.UserId
+            };
+
+            await _bus.Publish(reviewCreated);
+
             _rabbitMqService.SendMessage(request.ToString());
+
+            _logger.LogInformation("Ревью {ReviewId} создано успешно для пользователя {UserId}", reviewId,
+                review.UserId);
 
             return Ok();
         }
